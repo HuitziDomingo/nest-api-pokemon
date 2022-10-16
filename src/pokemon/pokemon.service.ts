@@ -71,6 +71,10 @@ export class PokemonService {
     return  
   }
 
+  /**
+   * Logica para manejar los errores
+   * @param error 
+   */
   private handleExceptions(error: any) {
     if (error.code === 11000)
       throw new BadRequestException(`Pokemon existente en la base de datos: ${JSON.stringify(error.keyValue)}`)
