@@ -3,7 +3,8 @@ import { InjectModel } from '@nestjs/mongoose'
 import { isValidObjectId, Model } from 'mongoose'
 import { CreatePokemonDto } from './dto/create-pokemon.dto'
 import { UpdatePokemonDto } from './dto/update-pokemon.dto'
-import { Pokemon } from './entities/pokemon.entity';
+import { Pokemon } from './entities/pokemon.entity'
+import { PaginationDto } from '../common/dto/paginaion.dto';
 
 @Injectable()
 export class PokemonService {
@@ -24,8 +25,9 @@ export class PokemonService {
     }
   }
 
-  findAll() {
-    return `This action returns all pokemon`
+  async findAll(pag: PaginationDto) {
+    let { limit = 10, offset = 0 } = pag
+    return await this.pokemonModel.find().limit(limit).skip(offset).sort({no: 1}).select("-__v")
   }
 
   async findOne(term: string) {
@@ -66,9 +68,9 @@ export class PokemonService {
 
   async remove(id: string) {
     let { deletedCount } = await this.pokemonModel.deleteOne({ __id: id })
-    if(deletedCount === 0)
+    if (deletedCount === 0)
       throw new BadRequestException(`Pokemon con ID: ${id} no encontrado. `)
-    return  
+    return
   }
 
   /**
